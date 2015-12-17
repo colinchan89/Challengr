@@ -12,17 +12,25 @@ var express = require('express'),
 //Connect to DB
 mongoose.connect(config.database);
 
-//create schema
+//create schemas
 var gameSchema = new Schema({
 	home: String,
 	away: String,
-	line: String
+	line: String,
+	wager: Number
+});
+var userSchema = new Schema({
+	username: { type: String, required: true, index: { unique: true }},
+	password: { type: String, required: true, select: false }
 });
 
 var Game = mongoose.model('Game', gameSchema);
+var User = mongoose.model('User', userSchema);
 
-//set routes
+//set up routes
 app.use('/', express.static(path.join(__dirname, 'public')));
+app.use('/allGames', express.static(path.join(__dirname, 'public/pages/games/all.html')));
+app.use('/signup', express.static(path.join(__dirname, 'public/pages/signup.html')));
 
 //Set up middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -57,8 +65,28 @@ apiRoutes.route('/api/games')
 				res.json(games)
 			})
 		})
+	});
 
+apiRoutes.route('/api/users')
+	.get(function(req, res){
+		User.find({}, function(err, users){
+			if (err) throw err
+			res.json(users)
+		})
 	})
+	.post(function(req, res){
+		var user = new User()
+		user.username = req.body.username
+		user.password = req.body.password
+
+		user.save(function(err){
+			if(err) throw err
+			User.find({}, function(err, users){
+				if (err) throw err
+				res.json(users)
+			})
+		})
+	});
 
 app.use('/', apiRoutes)
 
