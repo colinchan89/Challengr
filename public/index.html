@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Beast Mode</title>
+    <!-- Not present in the tutorial. Just for basic styling. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.1/paper/bootstrap.min.css">
+
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type="text/babel">
+
+    var Game = React.createClass({
+      render: function(){
+        return (
+          <button className="game">
+            <h4 className="awayTeam">{this.props.away} @</h4>
+            <h4 className="homeTeam">{this.props.home}</h4>
+            <h4 className="gameLine">{this.props.line}</h4>
+          </button>
+        );
+      }
+    });
+
+    var GameBox = React.createClass({
+      loadGamesFromServer: function(){
+        $.ajax({
+          url: this.props.url,
+          dataType: 'json',
+          cache: false,
+          success: function(data){
+            this.setState({data: data});
+          }.bind(this),
+          error: function(xhr, status, err){
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
+      },
+      handleGameSubmit: function(game){
+        var games = this.state.data;
+        var newGames = games.concat([game]);
+        this.setState({data: newGames});
+
+        $.ajax({
+          url: this.props.url,
+          dataType: 'json',
+          type: 'POST',
+          data: game,
+          success: function(data){
+            this.setState({data: data});
+          }.bind(this),
+          error: function(xhr, status, err){
+            this.setState({data: games})
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
+      },
+      getInitialState: function(){
+        return {data: []};
+      },
+      componentDidMount: function(){
+        this.loadGamesFromServer();
+        setInterval(this.loadGamesFromServer, this.props.pollInterval)
+      },
+      render: function() {
+        return (
+          <div className="gameBox">
+            <h1> Games </h1>
+            <GameList data={this.state.data} />
+            <GameForm onGameSubmit={this.handleGameSubmit}/>
+          </div>
+        );
+      }
+    });
+
+    var GameList = React.createClass({
+      render: function() {
+        var gameNodes = this.props.data.map(function(game){
+          return (
+            <Game home={game.home} away={game.away} line={game.line} key={game.id}>
+            </Game>
+          );
+        });
+        return (
+          <div className="gameList">
+            {gameNodes}
+          </div>
+        );
+      }
+    });
+
+    var GameForm = React.createClass({
+      getInitialState: function(){
+        return {home: '', away: '', line: ''};
+      },
+      handleHomeChange: function(e){
+        this.setState({home: e.target.value});
+      },
+      handleAwayChange: function(e){
+        this.setState({away: e.target.value});
+      },
+      handleLineChange: function(e){
+        this.setState({line: e.target.value});
+      },
+      handleSubmit: function(e){
+        e.preventDefault();
+        var home = this.state.home.trim();
+        var away = this.state.away.trim();
+        var line = this.state.line.trim();
+        if(!home || !away || !line) {
+          return;
+        }
+        this.props.onGameSubmit({home: home, away: away, line: line});
+        this.setState({home: '', away: '', line: ''})
+      },
+      render: function(){
+        return (
+          <form className="gameForm" onSubmit={this.handleSubmit}>
+            <input
+              type="text"
+              placeholder="Away Team"
+              value={this.state.away}
+              onChange={this.handleAwayChange}
+            />@
+            <input
+              type="text"
+              placeholder="Home Team"
+              value={this.state.home}
+              onChange={this.handleHomeChange}
+            /> Line:
+            <input
+              type="text"
+              value={this.state.line}
+              onChange={this.handleLineChange}
+            />
+            <button className="btn btn-success" type="submit">Send Challenge</button>
+          </form>
+        );
+      }
+    });
+
+    ReactDOM.render(
+      <GameBox url="/api/games" pollInterval={2000} />,
+      document.getElementById('content')
+    )
+    </script>
+  </body>
+</html>

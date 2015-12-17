@@ -4,23 +4,30 @@ var express = require('express'),
 		mongoose = require('mongoose'),
 		logger = require('morgan'),
 		bodyParser = require('body-parser'),
-    ejs = require('ejs'),
-    ejsLayouts = require('express-ejs-layouts')
+		path = require('path'),
+		config = require('./config'),
+		Schema = mongoose.Schema,
+		apiRoutes = express.Router()
 
 //Connect to DB
-mongoose.connect('mongodb://localhost/challengr', function(err){
-	if(err) throw err
-	console.log('Connected to MongoDB!')
+mongoose.connect(config.database);
+
+//create schema
+var gameSchema = new Schema({
+	home: String,
+	away: String,
+	line: String
 });
 
-// ejs configuration
-app.set('view engine', 'ejs')
-app.use(ejsLayouts)
+var Game = mongoose.model('Game', gameSchema);
+
+//set routes
+app.use('/', express.static(path.join(__dirname, 'public')));
 
 //Set up middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(logger('dev'));
+// app.use(logger('dev'));
 
 // configure our app to handle CORS requests
 app.use(function(req, res, next) {
@@ -30,10 +37,31 @@ app.use(function(req, res, next) {
 	next();
 });
 
-app.get('/', function(req, res){
-	res.render('index')
-});
+apiRoutes.route('/api/games')
+	.get(function(req, res){
+		Game.find({}, function(err, games){
+			if (err) throw err
+			res.json(games)
+		})
+	})
+	.post(function(req, res){
+		var game = new Game()
+		game.home = req.body.home
+		game.away = req.body.away
+		game.line = req.body.line
 
-app.listen(3000, function(){
-	console.log('Server Running')
+		game.save(function(err){
+			if(err) throw err
+			Game.find({}, function(err, games){
+				if (err) throw err
+				res.json(games)
+			})
+		})
+
+	})
+
+app.use('/', apiRoutes)
+
+app.listen(config.port, function(){
+	console.log('Server Running on ' + config.port)
 });
