@@ -1,5 +1,6 @@
 # **Challengr README**
 Link to Challengr: http://challengr.colinchan.net/
+
 GitHub Repo: https://github.com/colinchan89/Challengr
 
 Challengr ~~is~~ will be a web-based social network with an emphasis on sports
