@@ -138,7 +138,7 @@
         var username = this.state.username.trim();
         var password = this.state.password.trim();
         var confirm = this.state.confirm.trim();
-        if(!username || !password) {
+        if(!username || !password || !confirm) {
 					alert("Fill out all form fields!")
           return;
         }
@@ -147,8 +147,8 @@
 					this.setState({password: '', confirm: ''});
 					return;
 				}
+        alert("User Created! Welcome to Challengr!")
         this.props.onUserSubmit({username: username, password: password});
-        this.setState({username: '', password: '', confirm: ''});
       },
       render: function(){
         return (
