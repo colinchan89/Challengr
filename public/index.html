@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Challengr</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+    <style>
+      body {
+        font-family: 'Avenir';
+        font-weight: 200;
+        color: white;
+      }
+      .header {
+        margin-top: 12px;
+        margin-left: -110px;
+        color: white;
+      }
+      h3 {
+        margin-top: -15px;
+        margin-left: -75px;
+        color: white;
+      }
+      h5 {
+        color: white;
+        font-weight: 200;
+        margin-left: -40px;
+        margin-top: -10px;
+        line-height: 30px;
+      }
+      nav {
+        background-color: rgba(0,120,0,0.7);
+        font-family: 'Avenir';
+      }
+      nav .brand-logo {
+        padding-left: 14px;
+        font-size: 36px;
+      }
+      nav ul a {
+        font-size: 25px;
+      }
+      .row {
+        margin: auto;
+      }
+      .section {
+        background-color: rgba(0,120,0,0.7);
+      }
+      .parallax-container {
+        height: 510px;
+        background-color: rgba(255,255,255,0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-wrapper">
+        <a href="/" class="brand-logo hide-on-med-and-down">Challengr</a>
+        <ul id="nav-mobile" class="right">
+          <li><a href="/signup">Sign Up!</a></li>
+          <li><a href="/allGames">All Games!</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="parallax-container">
+      <div class="parallax"><img src="http://i.imgur.com/AAaiLKo.jpg?3"></div>
+    </div>
+    <div class="section">
+      <div class="row container">
+        <h2 class="header">Welcome to Challengr!</h2>
+        <h3> What Is Challengr? </h3>
+        <h5>Challengr is one-part social network, one-part sports betting app.
+          The idea behind Challengr is that while sports gambling remains illegal in
+          the USA, which pushes Americans to use a bookie or an off-shore online
+          sports book, both of which have significant drawbacks. Challengr is simply
+          a social network in which you can add friends and send challenges based
+          on the upcoming week's NFL games (more coming soon!).
+          With every challenge there is an option for a wager, which uses an
+          arbitrary measure called units. With Challengr you can track your betting
+          record with your friends with a tracker on how many units you are up or
+          down. Outside of Challengr you can determine what the wager unit actually
+          means, whether each unit counts for $1 or $5 or simply for pride. That's
+          the beauty of Challengr, you make the rules, we provide the platform.</h5>
+      </div>
+    </div>
+    <div class="parallax-container">
+      <div class="parallax"><img src="http://i.imgur.com/qmblX0X.jpg"></div>
+    </div>
+    <script>
+    $(document).ready(function(){
+      $('.parallax').parallax();
+    });
+    </script>
+  </body>
+</html>
