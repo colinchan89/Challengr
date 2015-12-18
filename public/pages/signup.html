@@ -7,14 +7,61 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.1/paper/bootstrap.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>  </head>
 		<style>
-			a {
-				color: white;
+			nav {
+				background-color: rgba(0,120,0,0.7);
+				font-family: 'Avenir';
 			}
-		</style>
-  </head>
-  <body>
+			nav .brand-logo {
+				padding-left: 14px;
+				font-size: 36px;
+			}
+			nav ul a {
+				font-size: 25px;
+			}
+			body {
+				background-color: rgb(240,240,240);
+				font-family: 'Avenir';
+				font-weight: 200;
+			}
+			h1 {
+				text-align: center;
+				color: rgba(0,120,0,0.7);
+			}
+			input[type=text], input[type=password] {
+				font-size: 20px;
+			}
+			img {
+				height: 500px;
+				float: right;
+				padding-right: 70px;
+			}
+			.btn {
+				background-color: rgba(0,120,0,0.7);
+			}
+			#content {
+				height: 500px;
+				width: 400px;
+				padding-top: 100px;
+				padding-left: 100px;
+			}
+			</style>
+	<body>
+		<nav>
+			<div class="nav-wrapper">
+				<a href="/" class="brand-logo hide-on-med-and-down">Challengr</a>
+				<ul id="nav-mobile" class="right">
+					<li><a href="/signup">Sign Up!</a></li>
+					<li><a href="/allGames">All Games!</a></li>
+					<li><a href="#">FAQ</a></li>
+					<li><a href="#">Contact</a></li>
+				</ul>
+			</div>
+		</nav>
+		<h1> Create a Challengr Account! </h1>
+		<img src="http://i.imgur.com/J6bIkGc.png?1">
     <div id="content"></div>
     <script type="text/babel">
 
@@ -43,10 +90,6 @@
         });
       },
       handleUserSubmit: function(user){
-        var users = this.state.data;
-        var newUsers = users.concat([user]);
-        this.setState({data: newUsers});
-
         $.ajax({
           url: this.props.url,
           dataType: 'json',
@@ -54,10 +97,10 @@
           data: user,
           success: function(data){
             this.setState({data: data});
+						// location.href = '/';
           }.bind(this),
           error: function(xhr, status, err){
-            this.setState({data: users})
-            console.error(this.props.url, status, err.toString());
+            location.href = '/signup';
           }.bind(this)
         });
       },
@@ -71,25 +114,7 @@
       render: function() {
         return (
           <div className="userBox">
-            <h1> Sign Up </h1>
-            <UserList data={this.state.data} />
             <UserForm onUserSubmit={this.handleUserSubmit}/>
-          </div>
-        );
-      }
-    });
-
-    var UserList = React.createClass({
-      render: function() {
-        var userNodes = this.props.data.map(function(user){
-          return (
-            <User username={user.username} key={user.id}>
-            </User>
-          );
-        });
-        return (
-          <div className="userList">
-            {userNodes}
           </div>
         );
       }
@@ -105,20 +130,30 @@
       handlePasswordChange: function(e){
         this.setState({password: e.target.value});
       },
+      handlePasswordConfirmChange: function(e){
+        this.setState({confirm: e.target.value});
+      },
       handleSubmit: function(e){
         e.preventDefault();
         var username = this.state.username.trim();
         var password = this.state.password.trim();
+        var confirm = this.state.confirm.trim();
         if(!username || !password) {
+					alert("Fill out all form fields!")
           return;
         }
+				if(password !== confirm) {
+					alert("Confirmation password doesn't match!")
+					this.setState({password: '', confirm: ''});
+					return;
+				}
         this.props.onUserSubmit({username: username, password: password});
-        this.setState({username: '', password: ''})
+        this.setState({username: '', password: '', confirm: ''});
       },
       render: function(){
         return (
           <form className="userForm" onSubmit={this.handleSubmit}>
-            <input
+						<input
               type="text"
               placeholder="Choose Username"
               value={this.state.username}
@@ -129,8 +164,14 @@
               placeholder="Password"
               value={this.state.password}
               onChange={this.handlePasswordChange}
-            />
-            <button className="btn btn-success" type="submit"><a href="/">Create Account!</a></button>
+            /> <br />
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={this.state.confirm}
+              onChange={this.handlePasswordConfirmChange}
+            /> <br />
+            <button className="btn" type="submit">Submit!</button>
           </form>
         );
       }

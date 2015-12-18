@@ -7,22 +7,65 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.1/paper/bootstrap.min.css">
-
-  </head>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+		<style>
+			nav {
+				background-color: rgba(0,120,0,0.7);
+				font-family: 'Avenir';
+			}
+			nav .brand-logo {
+				padding-left: 14px;
+				font-size: 36px;
+			}
+			nav ul a {
+				font-size: 25px;
+			}
+			body {
+				background-color: rgb(240,240,240);
+				font-family: 'Avenir';
+				font-weight: 200;
+			}
+			.game {
+				display: inline;
+			}
+			.header {
+				text-align: center;
+				color: rgba(0,120,0,0.7);
+			}
+			.btn {
+				background-color: rgba(0,120,0,0.7);
+			}
+			input[type=text] {
+				font-size: 20px;
+				width: 400px;
+			}
+		</style>
+	</head>
   <body>
+		<nav>
+			<div class="nav-wrapper">
+				<a href="/" class="brand-logo hide-on-med-and-down">Challengr</a>
+				<ul id="nav-mobile" class="right">
+					<li><a href="/signup">Sign Up!</a></li>
+					<li><a href="/allGames">All Games!</a></li>
+					<li><a href="#">FAQ</a></li>
+					<li><a href="#">Contact</a></li>
+				</ul>
+			</div>
+		</nav>
+		<h1 class="header"> Week 15 NFL Games </h1>
     <div id="content"></div>
     <script type="text/babel">
 
     var Game = React.createClass({
       render: function(){
         return (
-          <button className="game">
-            <h4 className="awayTeam">{this.props.away} @</h4>
+					<div className="game">
+            <button><h4 className="awayTeam">{this.props.away} @</h4>
             <h4 className="homeTeam">{this.props.home}</h4>
-            <h4 className="gameLine">{this.props.line}</h4>
-            <h4 className="wager">{this.props.wager} units</h4>
-          </button>
+            <h4 className="gameLine">{this.props.line}</h4></button>
+					</div>
         );
       }
     });
@@ -70,7 +113,6 @@
       render: function() {
         return (
           <div className="gameBox">
-            <h1> Games </h1>
             <GameList data={this.state.data} />
             <GameForm onGameSubmit={this.handleGameSubmit}/>
           </div>
@@ -82,7 +124,7 @@
       render: function() {
         var gameNodes = this.props.data.map(function(game){
           return (
-            <Game home={game.home} away={game.away} line={game.line} wager={game.wager} key={game.id}>
+            <Game home={game.home} away={game.away} line={game.line} key={game.id}>
             </Game>
           );
         });
@@ -96,7 +138,7 @@
 
     var GameForm = React.createClass({
       getInitialState: function(){
-        return {home: '', away: '', line: '', wager: ''};
+        return {home: '', away: '', line: ''};
       },
       handleHomeChange: function(e){
         this.setState({home: e.target.value});
@@ -107,20 +149,16 @@
       handleLineChange: function(e){
         this.setState({line: e.target.value});
       },
-      handleWagerChange: function(e){
-        this.setState({wager: e.target.value});
-      },
       handleSubmit: function(e){
         e.preventDefault();
         var home = this.state.home.trim();
         var away = this.state.away.trim();
         var line = this.state.line.trim();
-        var wager = this.state.wager.trim();
-        if(!home || !away || !line || !wager) {
+        if(!home || !away || !line) {
           return;
         }
-        this.props.onGameSubmit({home: home, away: away, line: line, wager: wager});
-        this.setState({home: '', away: '', line: '', wager: ''})
+        this.props.onGameSubmit({home: home, away: away, line: line});
+        this.setState({home: '', away: '', line: ''})
       },
       render: function(){
         return (
@@ -130,25 +168,20 @@
               placeholder="Away Team"
               value={this.state.away}
               onChange={this.handleAwayChange}
-            />@
+            /> <br />
             <input
               type="text"
               placeholder="Home Team"
               value={this.state.home}
               onChange={this.handleHomeChange}
-            /> Line:
+            /> <br />
             <input
               type="text"
+							placeholder={"Enter Line vs. " + this.state.home}
               value={this.state.line}
               onChange={this.handleLineChange}
-            /> Wager:
-            <input
-              type="number"
-              value={this.state.wager}
-							min=0
-              onChange={this.handleWagerChange}
-            /> units
-            <button className="btn btn-success" type="submit">Send Challenge</button>
+            /> <br />
+            <button className="btn btn-success" type="submit">Add Game</button>
           </form>
         );
       }

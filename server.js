@@ -16,9 +16,9 @@ mongoose.connect(config.database);
 var gameSchema = new Schema({
 	home: String,
 	away: String,
-	line: String,
-	wager: Number
+	line: String
 });
+
 var userSchema = new Schema({
 	username: { type: String, required: true, index: { unique: true }},
 	password: { type: String, required: true, select: false }
