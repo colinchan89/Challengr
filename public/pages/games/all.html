@@ -40,6 +40,11 @@
 				font-size: 20px;
 				width: 400px;
 			}
+      #content {
+				padding-top: 75px;
+				padding-left: 75px;
+        margin-top: -50px;
+			}
 		</style>
 	</head>
   <body>
@@ -155,6 +160,10 @@
         var away = this.state.away.trim();
         var line = this.state.line.trim();
         if(!home || !away || !line) {
+          return;
+        }
+        if(home == away) {
+          alert('A team cannot play itself')
           return;
         }
         this.props.onGameSubmit({home: home, away: away, line: line});
