@@ -10,7 +10,7 @@ challenge a friend. The database will also track betting history between friends
 as well as a cumulative score if you want to bet real money!
 
 ## Wireframe
-![Challengr Wireframe](./wirefram.png)
+![Challengr Wireframe](./wireframe.png)
 
 ## Technologies Used
 - Node, Express, MongoDB, React.js
