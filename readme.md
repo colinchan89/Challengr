@@ -10,9 +10,10 @@ schedule and betting lines. The user will be able to click on the game and
 challenge a friend. The database will also track betting history between friends
 as well as a cumulative score if you want to bet real money!
 
-## Wireframe
+## Wireframe & Screenshots
 ![Challengr Wireframe](./public/images/wireframe.png)
 ![Challengr Landing Page](./public/images/landingpage.png)
+![Challengr Game List](./public/images/gamelist.png)
 
 ## Technologies Used
 - Node, Express, MongoDB, React.js
